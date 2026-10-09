@@ -1,0 +1,158 @@
+{{ 'spa-landing.css' | asset_url | stylesheet_tag }}
+
+{%- assign uid = section.id -%}
+<section class="spa spa--alt spa-booking" id="{{ section.settings.anchor | default: 'reservation' | handleize }}" aria-labelledby="spa-booking-title-{{ uid }}">
+  <span class="spa__blob spa__blob--pink" style="width:380px;height:380px;top:-120px;left:-160px;"></span>
+
+  <div class="spa__container spa-booking__grid">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="spa__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="spa__title" id="spa-booking-title-{{ uid }}">{{ section.settings.title }}</h2>
+      {%- if section.settings.text != blank -%}
+        <p class="spa__lead">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ol class="spa-booking__steps">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <div>
+                <strong>{{ block.settings.title | escape }}</strong>
+                <span>{{ block.settings.text | escape }}</span>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      {%- endif -%}
+    </div>
+
+    {%- form 'contact', id: 'spa-booking-form', class: 'spa-form' -%}
+      {%- if form.posted_successfully? -%}
+        <div class="spa-alert spa-alert--success" role="status">
+          {% render 'spa-icon', name: 'check' %}
+          <span>{{ section.settings.success_message | escape }}</span>
+        </div>
+      {%- elsif form.errors -%}
+        <div class="spa-alert spa-alert--error" role="alert">
+          {% render 'spa-icon', name: 'alert' %}
+          <span>{{ form.errors | default_errors }}</span>
+        </div>
+      {%- endif -%}
+
+      <input type="hidden" name="contact[Objet]" value="Demande de réservation">
+
+      <div class="spa-form__row spa-form__row--2">
+        <div class="spa-field">
+          <label for="spa-name-{{ uid }}">Nom complet <span class="spa-req" aria-hidden="true">*</span></label>
+          <input id="spa-name-{{ uid }}" type="text" name="contact[name]" autocomplete="name" required value="{{ form.name }}">
+        </div>
+        <div class="spa-field">
+          <label for="spa-phone-{{ uid }}">Téléphone <span class="spa-req" aria-hidden="true">*</span></label>
+          <input id="spa-phone-{{ uid }}" type="tel" name="contact[phone]" autocomplete="tel" required value="{{ form.phone }}">
+        </div>
+      </div>
+
+      <div class="spa-form__row">
+        <div class="spa-field">
+          <label for="spa-email-{{ uid }}">E-mail <span class="spa-req" aria-hidden="true">*</span></label>
+          <input id="spa-email-{{ uid }}" type="email" name="contact[email]" autocomplete="email" spellcheck="false" autocapitalize="off" required value="{{ form.email }}">
+        </div>
+      </div>
+
+      <div class="spa-form__row">
+        <div class="spa-field">
+          <label for="spa-service-{{ uid }}">Soin souhaité <span class="spa-req" aria-hidden="true">*</span></label>
+          <select id="spa-service-{{ uid }}" name="contact[Soin]" required>
+            <option value="">Choisir un soin</option>
+            {%- assign services = section.settings.services | newline_to_br | split: '<br />' -%}
+            {%- for s in services -%}
+              {%- assign s = s | strip -%}
+              {%- if s != blank -%}<option value="{{ s | escape }}">{{ s | escape }}</option>{%- endif -%}
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+
+      <div class="spa-form__row spa-form__row--2">
+        <div class="spa-field">
+          <label for="spa-date-{{ uid }}">Date souhaitée <span class="spa-req" aria-hidden="true">*</span></label>
+          <input id="spa-date-{{ uid }}" type="date" name="contact[Date]" min="{{ 'now' | date: '%Y-%m-%d' }}" required>
+        </div>
+        <div class="spa-field">
+          <label for="spa-slot-{{ uid }}">Créneau préféré</label>
+          <select id="spa-slot-{{ uid }}" name="contact[Créneau]">
+            {%- assign slots = section.settings.slots | newline_to_br | split: '<br />' -%}
+            {%- for s in slots -%}
+              {%- assign s = s | strip -%}
+              {%- if s != blank -%}<option value="{{ s | escape }}">{{ s | escape }}</option>{%- endif -%}
+            {%- endfor -%}
+          </select>
+        </div>
+      </div>
+
+      <div class="spa-form__row">
+        <div class="spa-field">
+          <label for="spa-msg-{{ uid }}">Message (facultatif)</label>
+          <textarea id="spa-msg-{{ uid }}" name="contact[body]" placeholder="Allergies, préférences, carte cadeau…">{{ form.body }}</textarea>
+        </div>
+      </div>
+
+      <label class="spa-form__consent" for="spa-consent-{{ uid }}">
+        <input id="spa-consent-{{ uid }}" type="checkbox" name="contact[Consentement]" value="Oui" required>
+        <span>{{ section.settings.consent_text | escape }}</span>
+      </label>
+
+      <button type="submit" class="spa__btn spa__btn--primary">
+        {{ section.settings.button_label | escape }}
+        {% render 'spa-icon', name: 'calendar' %}
+      </button>
+      {%- if section.settings.note != blank -%}
+        <p class="spa-form__note">{{ section.settings.note | escape }}</p>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Spa · Réservation",
+  "tag": "div",
+  "class": "spa-section",
+  "settings": [
+    { "type": "paragraph", "content": "Le formulaire utilise le formulaire de contact Shopify : chaque demande arrive par e-mail à l'adresse du magasin. Le rendez-vous se confirme ensuite manuellement." },
+    { "type": "text", "id": "anchor", "label": "Ancre", "default": "reservation", "info": "Cible des liens #reservation" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Réservation" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Réservez votre <em>moment</em>" },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Indiquez le soin et la date souhaités : nous vous rappelons pour confirmer le créneau." },
+    { "type": "textarea", "id": "services", "label": "Liste des soins", "info": "Un soin par ligne", "default": "Soin éclat du visage\nMassage relaxant\nRituel hydratation\nGommage corps\nBeauté des mains\nParenthèse duo\nJe ne sais pas encore" },
+    { "type": "textarea", "id": "slots", "label": "Créneaux", "info": "Un créneau par ligne", "default": "Matin (9 h – 12 h)\nDébut d'après-midi (12 h – 15 h)\nFin d'après-midi (15 h – 19 h)\nPeu importe" },
+    { "type": "text", "id": "consent_text", "label": "Texte de consentement", "default": "J'accepte que mes coordonnées soient utilisées pour traiter ma demande de rendez-vous." },
+    { "type": "text", "id": "button_label", "label": "Bouton", "default": "Envoyer ma demande" },
+    { "type": "text", "id": "note", "label": "Note sous le bouton", "default": "Réponse sous 24 h ouvrées." },
+    { "type": "text", "id": "success_message", "label": "Message de confirmation", "default": "Merci ! Votre demande est bien envoyée. Nous vous recontactons rapidement pour confirmer." }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Étape",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre", "default": "Étape" },
+        { "type": "text", "id": "text", "label": "Texte" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spa · Réservation",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Choisissez votre soin", "text": "Sélectionnez une prestation et une date." } },
+        { "type": "step", "settings": { "title": "Nous vous rappelons", "text": "Confirmation du créneau par téléphone ou e-mail." } },
+        { "type": "step", "settings": { "title": "Profitez", "text": "Arrivez 10 minutes avant, on s'occupe du reste." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,73 @@
+{{ 'spa-landing.css' | asset_url | stylesheet_tag }}
+
+<section class="spa spa-contact" id="{{ section.settings.anchor | default: 'contact' | handleize }}" aria-labelledby="spa-contact-title-{{ section.id }}">
+  <div class="spa__container">
+    <header class="spa__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="spa__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="spa__title" id="spa-contact-title-{{ section.id }}">{{ section.settings.title }}</h2>
+    </header>
+
+    <div class="spa-contact__grid">
+      <ul class="spa-contact__list" role="list">
+        {%- if section.settings.address != blank -%}
+          <li class="spa-contact__item">
+            <span class="spa-contact__icon">{% render 'spa-icon', name: 'map-pin' %}</span>
+            <div><span class="spa-contact__label">Adresse</span><div class="spa-contact__value">{{ section.settings.address }}</div></div>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.phone != blank -%}
+          <li class="spa-contact__item">
+            <span class="spa-contact__icon">{% render 'spa-icon', name: 'phone' %}</span>
+            <div><span class="spa-contact__label">Téléphone</span>
+              <p class="spa-contact__value"><a href="tel:{{ section.settings.phone | remove: ' ' | remove: '.' }}">{{ section.settings.phone | escape }}</a></p></div>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.email != blank -%}
+          <li class="spa-contact__item">
+            <span class="spa-contact__icon">{% render 'spa-icon', name: 'mail' %}</span>
+            <div><span class="spa-contact__label">E-mail</span>
+              <p class="spa-contact__value"><a href="mailto:{{ section.settings.email }}">{{ section.settings.email | escape }}</a></p></div>
+          </li>
+        {%- endif -%}
+        {%- if section.settings.hours != blank -%}
+          <li class="spa-contact__item">
+            <span class="spa-contact__icon">{% render 'spa-icon', name: 'clock' %}</span>
+            <div><span class="spa-contact__label">Horaires</span><div class="spa-contact__value">{{ section.settings.hours }}</div></div>
+          </li>
+        {%- endif -%}
+      </ul>
+
+      {%- if section.settings.show_map and section.settings.map_query != blank -%}
+        <div class="spa-contact__map">
+          <iframe
+            src="https://www.google.com/maps?q={{ section.settings.map_query | url_encode }}&output=embed"
+            title="Plan d'accès"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Spa · Contact",
+  "tag": "div",
+  "class": "spa-section",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Ancre", "default": "contact" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Nous trouver" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Au plaisir de <em>vous accueillir</em>" },
+    { "type": "richtext", "id": "address", "label": "Adresse", "default": "<p>12 rue des Lilas<br>75000 Paris</p>" },
+    { "type": "text", "id": "phone", "label": "Téléphone", "default": "01 23 45 67 89" },
+    { "type": "text", "id": "email", "label": "E-mail", "default": "bonjour@exemple.fr" },
+    { "type": "richtext", "id": "hours", "label": "Horaires", "default": "<p>Mardi – samedi : 9 h 30 – 19 h<br>Dimanche et lundi : fermé</p>" },
+    { "type": "checkbox", "id": "show_map", "label": "Afficher le plan Google Maps", "default": true, "info": "Charge un contenu Google : pensez à le mentionner dans votre politique de cookies." },
+    { "type": "text", "id": "map_query", "label": "Adresse pour le plan", "default": "Paris, France" }
+  ],
+  "presets": [{ "name": "Spa · Contact" }]
+}
+{% endschema %}

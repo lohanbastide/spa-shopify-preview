@@ -1,0 +1,52 @@
+{
+  "sections": {
+    "hero": {
+      "type": "spa-hero",
+      "blocks": {
+        "trust-1": { "type": "trust", "settings": { "text": "Esthéticiennes diplômées" } },
+        "trust-2": { "type": "trust", "settings": { "text": "Soins sur rendez-vous" } },
+        "trust-3": { "type": "trust", "settings": { "text": "Carte cadeau disponible" } }
+      },
+      "block_order": ["trust-1", "trust-2", "trust-3"],
+      "settings": {}
+    },
+    "services": {
+      "type": "spa-services",
+      "blocks": {
+        "s1": { "type": "service", "settings": { "icon": "sparkles", "title": "Soin éclat du visage", "text": "Nettoyage, gommage doux, masque et modelage pour une peau lumineuse et reposée.", "duration": "60 min", "price": "75 €" } },
+        "s2": { "type": "service", "settings": { "icon": "heart", "title": "Massage relaxant", "text": "Modelage enveloppant aux huiles chaudes pour relâcher les tensions du dos et des épaules.", "duration": "50 min", "price": "70 €" } },
+        "s3": { "type": "service", "settings": { "icon": "droplet", "title": "Rituel hydratation", "text": "Enveloppement et soin intense pour les peaux sèches ou fatiguées par le soleil.", "duration": "75 min", "price": "90 €" } },
+        "s4": { "type": "service", "settings": { "icon": "leaf", "title": "Gommage corps", "text": "Exfoliation aux sels marins et huiles végétales, suivie d'une hydratation complète.", "duration": "45 min", "price": "55 €" } },
+        "s5": { "type": "service", "settings": { "icon": "sun", "title": "Beauté des mains", "text": "Soin des ongles et des cuticules, massage des mains et pose de vernis au choix.", "duration": "45 min", "price": "40 €" } },
+        "s6": { "type": "service", "settings": { "icon": "award", "title": "Parenthèse duo", "text": "Massage côte à côte en cabine double, suivi d'un thé et d'un temps de repos.", "duration": "90 min", "price": "160 €" } }
+      },
+      "block_order": ["s1", "s2", "s3", "s4", "s5", "s6"],
+      "settings": {}
+    },
+    "testimonials": {
+      "type": "spa-testimonials",
+      "blocks": {
+        "t1": { "type": "testimonial", "settings": { "quote": "Exemple d'avis : un accueil chaleureux, un soin du visage tout en douceur et une peau visiblement reposée.", "name": "Prénom N.", "detail": "Soin éclat du visage", "rating": 5 } },
+        "t2": { "type": "testimonial", "settings": { "quote": "Exemple d'avis : le massage m'a vraiment détendue, on sent l'écoute et le professionnalisme.", "name": "Prénom N.", "detail": "Massage relaxant", "rating": 5 } },
+        "t3": { "type": "testimonial", "settings": { "quote": "Exemple d'avis : un lieu calme et soigné, idéal pour offrir une carte cadeau.", "name": "Prénom N.", "detail": "Parenthèse duo", "rating": 5 } }
+      },
+      "block_order": ["t1", "t2", "t3"],
+      "settings": {}
+    },
+    "booking": {
+      "type": "spa-booking",
+      "blocks": {
+        "b1": { "type": "step", "settings": { "title": "Choisissez votre soin", "text": "Sélectionnez une prestation et une date." } },
+        "b2": { "type": "step", "settings": { "title": "Nous vous rappelons", "text": "Confirmation du créneau par téléphone ou e-mail." } },
+        "b3": { "type": "step", "settings": { "title": "Profitez", "text": "Arrivez 10 minutes avant, on s'occupe du reste." } }
+      },
+      "block_order": ["b1", "b2", "b3"],
+      "settings": {}
+    },
+    "contact": {
+      "type": "spa-contact",
+      "settings": {}
+    }
+  },
+  "order": ["hero", "services", "testimonials", "booking", "contact"]
+}

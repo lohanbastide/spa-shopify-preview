@@ -1,0 +1,89 @@
+{{ 'spa-landing.css' | asset_url | stylesheet_tag }}
+
+<section class="spa spa--alt spa-services" id="{{ section.settings.anchor | default: 'soins' | handleize }}" aria-labelledby="spa-services-title-{{ section.id }}">
+  <span class="spa__blob spa__blob--sage" style="width:420px;height:420px;top:10%;left:-220px;"></span>
+
+  <div class="spa__container">
+    <header class="spa__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="spa__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="spa__title" id="spa-services-title-{{ section.id }}">{{ section.settings.title }}</h2>
+      {%- if section.settings.text != blank -%}
+        <p class="spa__lead">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+    </header>
+
+    <div class="spa-services__grid">
+      {%- for block in section.blocks -%}
+        <article class="spa-card" {{ block.shopify_attributes }}>
+          <span class="spa-card__icon">{% render 'spa-icon', name: block.settings.icon %}</span>
+          <h3 class="spa-card__title">{{ block.settings.title | escape }}</h3>
+          {%- if block.settings.text != blank -%}
+            <p class="spa-card__text">{{ block.settings.text | escape }}</p>
+          {%- endif -%}
+          {%- if block.settings.duration != blank or block.settings.price != blank -%}
+            <div class="spa-card__meta">
+              {%- if block.settings.duration != blank -%}
+                <span class="spa-card__duration">{% render 'spa-icon', name: 'clock' %}{{ block.settings.duration | escape }}</span>
+              {%- endif -%}
+              {%- if block.settings.price != blank -%}
+                <span class="spa-card__price">{{ block.settings.price | escape }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Spa · Soins",
+  "tag": "div",
+  "class": "spa-section",
+  "settings": [
+    { "type": "text", "id": "anchor", "label": "Ancre", "default": "soins", "info": "Cible des liens #soins" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Nos soins" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Des rituels pensés <em>pour vous</em>" },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Chaque soin commence par un échange pour adapter les gestes et les produits à votre peau." }
+  ],
+  "blocks": [
+    {
+      "type": "service",
+      "name": "Soin",
+      "settings": [
+        {
+          "type": "select", "id": "icon", "label": "Icône", "default": "sparkles",
+          "options": [
+            { "value": "sparkles", "label": "Éclat" },
+            { "value": "leaf", "label": "Feuille" },
+            { "value": "heart", "label": "Cœur" },
+            { "value": "droplet", "label": "Goutte" },
+            { "value": "sun", "label": "Soleil" },
+            { "value": "award", "label": "Distinction" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Nom du soin", "default": "Soin du visage" },
+        { "type": "textarea", "id": "text", "label": "Description" },
+        { "type": "text", "id": "duration", "label": "Durée", "default": "60 min" },
+        { "type": "text", "id": "price", "label": "Prix", "default": "75 €" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spa · Soins",
+      "blocks": [
+        { "type": "service", "settings": { "icon": "sparkles", "title": "Soin éclat du visage", "text": "Nettoyage, gommage doux, masque et modelage pour une peau lumineuse et reposée.", "duration": "60 min", "price": "75 €" } },
+        { "type": "service", "settings": { "icon": "heart", "title": "Massage relaxant", "text": "Modelage enveloppant aux huiles chaudes pour relâcher les tensions du dos et des épaules.", "duration": "50 min", "price": "70 €" } },
+        { "type": "service", "settings": { "icon": "droplet", "title": "Rituel hydratation", "text": "Enveloppement et soin intense pour les peaux sèches ou fatiguées par le soleil.", "duration": "75 min", "price": "90 €" } },
+        { "type": "service", "settings": { "icon": "leaf", "title": "Gommage corps", "text": "Exfoliation aux sels marins et huiles végétales, suivie d'une hydratation complète.", "duration": "45 min", "price": "55 €" } },
+        { "type": "service", "settings": { "icon": "sun", "title": "Beauté des mains", "text": "Soin des ongles et des cuticules, massage des mains et pose de vernis au choix.", "duration": "45 min", "price": "40 €" } },
+        { "type": "service", "settings": { "icon": "award", "title": "Parenthèse duo", "text": "Massage côte à côte en cabine double, suivi d'un thé et d'un temps de repos.", "duration": "90 min", "price": "160 €" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

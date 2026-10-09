@@ -1,0 +1,95 @@
+{{ 'spa-landing.css' | asset_url | stylesheet_tag }}
+
+<section class="spa spa-testimonials" id="spa-testimonials-{{ section.id }}" aria-labelledby="spa-testimonials-title-{{ section.id }}">
+  <span class="spa__blob spa__blob--pink" style="width:460px;height:460px;bottom:-160px;right:-200px;"></span>
+
+  <div class="spa__container">
+    <header class="spa__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="spa__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="spa__title" id="spa-testimonials-title-{{ section.id }}">{{ section.settings.title }}</h2>
+    </header>
+
+    <div class="spa-testimonials__grid">
+      {%- for block in section.blocks -%}
+        <figure class="spa-quote" {{ block.shopify_attributes }}>
+          <span class="spa-quote__mark">{% render 'spa-icon', name: 'quote' %}</span>
+          {%- assign rating = block.settings.rating | plus: 0 -%}
+          {%- if rating > 0 -%}
+            <div class="spa-quote__stars" role="img" aria-label="Note : {{ rating }} sur 5">
+              {%- for i in (1..rating) -%}{% render 'spa-icon', name: 'star' %}{%- endfor -%}
+            </div>
+          {%- endif -%}
+          <blockquote class="spa-quote__text">{{ block.settings.quote | escape }}</blockquote>
+          <figcaption class="spa-quote__author">
+            <span class="spa-quote__avatar" aria-hidden="true">
+              {%- if block.settings.avatar != blank -%}
+                {{ block.settings.avatar | image_url: width: 96 | image_tag: alt: '', loading: 'lazy' }}
+              {%- else -%}
+                {{ block.settings.name | slice: 0 | upcase }}
+              {%- endif -%}
+            </span>
+            <span>
+              <span class="spa-quote__name">{{ block.settings.name | escape }}</span>
+              {%- if block.settings.detail != blank -%}
+                <span class="spa-quote__detail">{{ block.settings.detail | escape }}</span>
+              {%- endif -%}
+            </span>
+          </figcaption>
+        </figure>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.cta_label != blank -%}
+      <div class="spa-testimonials__cta">
+        {%- if section.settings.cta_text != blank -%}
+          <p>{{ section.settings.cta_text | escape }}</p>
+        {%- endif -%}
+        <a class="spa__btn spa__btn--primary" href="{{ section.settings.cta_link | default: '#reservation' }}">
+          {{ section.settings.cta_label | escape }}
+          {% render 'spa-icon', name: 'arrow-right' %}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Spa · Témoignages",
+  "tag": "div",
+  "class": "spa-section",
+  "settings": [
+    { "type": "paragraph", "content": "Les avis fournis par défaut sont des EXEMPLES. Remplacez-les par de vrais avis clients, avec leur accord, avant publication." },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Elles nous font confiance" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Ce que disent <em>nos clientes</em>" },
+    { "type": "text", "id": "cta_text", "label": "Phrase d'appel", "default": "Envie de vivre ce moment à votre tour ?" },
+    { "type": "text", "id": "cta_label", "label": "Bouton", "default": "Réserver mon soin" },
+    { "type": "url", "id": "cta_link", "label": "Lien du bouton", "info": "Vide = ancre #reservation" }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Avis",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Avis", "default": "Remplacez ce texte par un avis client réel." },
+        { "type": "text", "id": "name", "label": "Prénom et initiale", "default": "Prénom N." },
+        { "type": "text", "id": "detail", "label": "Précision (soin, ville…)" },
+        { "type": "range", "id": "rating", "label": "Note", "min": 0, "max": 5, "step": 1, "default": 5, "info": "0 = pas d'étoiles" },
+        { "type": "image_picker", "id": "avatar", "label": "Photo (facultatif)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Spa · Témoignages",
+      "blocks": [
+        { "type": "testimonial", "settings": { "quote": "Exemple d'avis : un accueil chaleureux, un soin du visage tout en douceur et une peau visiblement reposée.", "name": "Prénom N.", "detail": "Soin éclat du visage", "rating": 5 } },
+        { "type": "testimonial", "settings": { "quote": "Exemple d'avis : le massage m'a vraiment détendue, on sent l'écoute et le professionnalisme.", "name": "Prénom N.", "detail": "Massage relaxant", "rating": 5 } },
+        { "type": "testimonial", "settings": { "quote": "Exemple d'avis : un lieu calme et soigné, idéal pour offrir une carte cadeau.", "name": "Prénom N.", "detail": "Parenthèse duo", "rating": 5 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

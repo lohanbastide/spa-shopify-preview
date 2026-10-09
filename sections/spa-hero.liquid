@@ -1,0 +1,105 @@
+{{ 'spa-landing.css' | asset_url | stylesheet_tag }}
+
+<section class="spa spa-hero" id="spa-hero-{{ section.id }}" aria-labelledby="spa-hero-title-{{ section.id }}">
+  <span class="spa__blob spa__blob--pink" style="width:520px;height:520px;top:-180px;right:-160px;"></span>
+  <span class="spa__blob spa__blob--sage" style="width:340px;height:340px;bottom:-140px;left:-120px;"></span>
+
+  <div class="spa__container spa-hero__grid">
+    <div class="spa-hero__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="spa__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="spa__title" id="spa-hero-title-{{ section.id }}">{{ section.settings.title }}</h1>
+      {%- if section.settings.text != blank -%}
+        <p class="spa__lead">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+
+      <div class="spa__actions">
+        {%- if section.settings.cta_label != blank -%}
+          <a class="spa__btn spa__btn--primary" href="{{ section.settings.cta_link | default: '#reservation' }}">
+            {{ section.settings.cta_label | escape }}
+            {% render 'spa-icon', name: 'arrow-right' %}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.cta2_label != blank -%}
+          <a class="spa__btn spa__btn--ghost" href="{{ section.settings.cta2_link | default: '#soins' }}">
+            {{ section.settings.cta2_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="spa-hero__trust" role="list">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              {% render 'spa-icon', name: 'check' %}
+              {{ block.settings.text | escape }}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="spa-hero__media">
+      <div class="spa-hero__frame">
+        {%- if section.settings.image != blank -%}
+          {{ section.settings.image | image_url: width: 1200 | image_tag:
+            loading: 'eager',
+            fetchpriority: 'high',
+            sizes: '(min-width: 1024px) 520px, 90vw',
+            widths: '400, 600, 800, 1000, 1200',
+            alt: section.settings.image.alt
+          }}
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+      </div>
+      {%- if section.settings.badge != blank -%}
+        <div class="spa-hero__badge">
+          <span class="spa-hero__badge-icon">{% render 'spa-icon', name: 'leaf' %}</span>
+          <span>{{ section.settings.badge | escape }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Spa · Hero",
+  "tag": "div",
+  "class": "spa-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Institut de beauté & spa" },
+    { "type": "inline_richtext", "id": "title", "label": "Titre", "default": "Prenez le temps de <em>vous retrouver</em>" },
+    { "type": "textarea", "id": "text", "label": "Texte", "default": "Soins du visage, massages et rituels corps dans un cocon apaisant. Une parenthèse pensée pour votre peau et votre esprit." },
+    { "type": "text", "id": "cta_label", "label": "Bouton principal", "default": "Réserver un soin" },
+    { "type": "url", "id": "cta_link", "label": "Lien du bouton principal", "info": "Vide = ancre #reservation" },
+    { "type": "text", "id": "cta2_label", "label": "Bouton secondaire", "default": "Découvrir nos soins" },
+    { "type": "url", "id": "cta2_link", "label": "Lien du bouton secondaire", "info": "Vide = ancre #soins" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Format portrait conseillé (4:5), au moins 1000 px de large" },
+    { "type": "text", "id": "badge", "label": "Pastille sur l'image", "default": "Cosmétiques naturels sélectionnés" }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Argument de confiance",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "text", "label": "Texte", "default": "Esthéticiennes diplômées" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Spa · Hero",
+      "blocks": [
+        { "type": "trust", "settings": { "text": "Esthéticiennes diplômées" } },
+        { "type": "trust", "settings": { "text": "Soins sur rendez-vous" } },
+        { "type": "trust", "settings": { "text": "Carte cadeau disponible" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
